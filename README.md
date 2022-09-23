@@ -12,7 +12,7 @@ Support release management monitoring Transport Request status in target systems
 ## Features
 
 - List transports after certain release date
-- Shows release date and import Return Codes(RC) in target systems
+- Shows release date and import Return Codes(RC) and dates in target systems
 - Shows which request contains OSS Notes
 - Double-click on the line shows transport request
 
