@@ -12,11 +12,6 @@
    </PROGDIR>
    <TPOOL>
     <item>
-     <ID>R</ID>
-     <ENTRY>Transport Status List</ENTRY>
-     <LENGTH>21</LENGTH>
-    </item>
-    <item>
      <ID>I</ID>
      <KEY>C01</KEY>
      <ENTRY>Note</ENTRY>
@@ -47,6 +42,11 @@
      <LENGTH>12</LENGTH>
     </item>
     <item>
+     <ID>R</ID>
+     <ENTRY>Transport Status List</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
      <ID>S</ID>
      <KEY>P_EXPDAT</KEY>
      <ENTRY>Released since</ENTRY>
@@ -57,6 +57,12 @@
      <KEY>P_RELEAS</KEY>
      <ENTRY>Released only</ENTRY>
      <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_PROJ</KEY>
+     <ENTRY>CTS Project</ENTRY>
+     <LENGTH>19</LENGTH>
     </item>
     <item>
      <ID>S</ID>

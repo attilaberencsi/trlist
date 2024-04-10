@@ -23,10 +23,10 @@ REPORT zbc_tr_check.
 "TYPE-POOLS: ctslg, slis, sctsc, abap.
 
 CONSTANTS:
-  gc_sysid_dev  TYPE trtarsys VALUE 'DS4',
-  gc_sysid_qua  TYPE trtarsys VALUE 'QS4',
-  gc_sysid_prpr TYPE trtarsys VALUE '',   "PreProduction
-  gc_sysid_prd  TYPE trtarsys VALUE 'PS4'.
+  gc_sysid_dev  TYPE trtarsys VALUE 'ISD',
+  gc_sysid_qua  TYPE trtarsys VALUE 'IST',
+  gc_sysid_prpr TYPE trtarsys VALUE 'ISW',   "PreProduction
+  gc_sysid_prd  TYPE trtarsys VALUE 'ISP'.
 
 DATA:
   gt_request          TYPE STANDARD TABLE OF zds_trcheckui,
@@ -42,6 +42,7 @@ DATA:
   gs_truser           TYPE trdyse01cm,
   gt_fieldcat         TYPE slis_t_fieldcat_alv,
   gs_e070             TYPE e070,
+  gs_ctsproject       TYPE ctsproject,
   gv_trkorr           TYPE trkorr,
   gt_trfunc_sel       TYPE RANGE OF trfunction,
   gs_trfunc_sel       LIKE LINE OF gt_trfunc_sel,
@@ -56,7 +57,8 @@ PARAMETERS:
 
 SELECT-OPTIONS:
   s_user    FOR gs_truser-username,
-  s_trfunc  FOR gs_e070-trfunction DEFAULT 'K'.
+  s_trfunc  FOR gs_e070-trfunction DEFAULT 'K',
+  s_proj    FOR gs_ctsproject-trkorr.
 
 PARAMETERS:
   p_releas AS CHECKBOX DEFAULT abap_true.
@@ -110,7 +112,6 @@ START-OF-SELECTION.
           OTHERS        = 1.
     ENDIF.
 
-
     READ TABLE gs_request_info-attributes INTO gs_trattrib
       WITH KEY attribute = 'EXPORT_TIMESTAMP'.
 
@@ -121,19 +122,30 @@ START-OF-SELECTION.
       <gs_request>-export_time = gs_trattrib-reference+8(8).
     ENDIF.
 
+    "Filter by Release Date
     IF <gs_request>-export_date LT p_expdat
       AND <gs_request>-export_date IS NOT INITIAL.
       DELETE gt_request.
       CONTINUE.
     ENDIF.
 
-    CLEAR gs_cofile.
+    CLEAR: gs_cofile, gv_project.
     CALL FUNCTION 'TR_READ_GLOBAL_INFO_OF_REQUEST'
       EXPORTING
         iv_trkorr  = <gs_request>-trkorr
       IMPORTING
         es_cofile  = gs_cofile
         ev_project = gv_project.
+
+    CLEAR gs_trattrib.
+    READ TABLE gs_request_info-attributes INTO gs_trattrib
+      WITH KEY attribute = 'SAP_CTS_PROJECT'.
+
+    "Filter by CTS Project
+    IF gs_trattrib-reference NOT IN s_proj.
+      DELETE gt_request.
+      CONTINUE.
+    ENDIF.
 
     LOOP AT gs_cofile-systems INTO gs_system.
       CASE gs_system-systemid.
