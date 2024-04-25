@@ -1,9 +1,6 @@
-@AbapCatalog.sqlViewName: 'ZITRREQ'
-@AbapCatalog.compiler.compareFilter: true
-@AbapCatalog.preserveKey: true
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Transport Request'
-define view ZI_TransportRequest
+define view entity ZI_TransportRequest
   as select from e070
 
   association [0..*] to ZI_TransportRequest_Text     as _Text      on $projection.Trkorr = _Text.Trkorr
