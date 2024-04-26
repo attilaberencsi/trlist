@@ -1,0 +1,4 @@
+@EndUserText.label: 'Transport Status List'
+define service ZBC_TRLIST {
+  expose ZC_TransportRequestQuery as Transport;
+}

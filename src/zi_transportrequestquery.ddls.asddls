@@ -28,3 +28,6 @@ define view entity ZI_TRANSPORTREQUESTQUERY
       _Attribute,
       _Text
 }
+
+where
+  Strkorr = ''
