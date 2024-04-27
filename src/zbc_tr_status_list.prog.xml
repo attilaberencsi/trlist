@@ -12,6 +12,12 @@
    </PROGDIR>
    <TPOOL>
     <item>
+     <ID>I</ID>
+     <KEY>BHS</KEY>
+     <ENTRY>System Configuration</ENTRY>
+     <LENGTH>40</LENGTH>
+    </item>
+    <item>
      <ID>R</ID>
      <ENTRY>Transport Status List</ENTRY>
      <LENGTH>21</LENGTH>
@@ -25,20 +31,20 @@
     <item>
      <ID>S</ID>
      <KEY>P_SY_PRD</KEY>
-     <ENTRY>Quality System ID</ENTRY>
-     <LENGTH>25</LENGTH>
+     <ENTRY>Production System ID</ENTRY>
+     <LENGTH>28</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>P_SY_PRE</KEY>
-     <ENTRY>Pre-Prod System ID</ENTRY>
-     <LENGTH>26</LENGTH>
+     <ENTRY>Pre-Production System ID</ENTRY>
+     <LENGTH>32</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>P_SY_QUA</KEY>
-     <ENTRY>Production System ID</ENTRY>
-     <LENGTH>28</LENGTH>
+     <ENTRY>Quality System ID</ENTRY>
+     <LENGTH>25</LENGTH>
     </item>
    </TPOOL>
   </asx:values>
