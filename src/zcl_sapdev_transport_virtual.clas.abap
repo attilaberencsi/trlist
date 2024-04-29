@@ -14,17 +14,19 @@ CLASS zcl_sapdev_transport_virtual DEFINITION
     INTERFACES if_salv_ida_calc_field_handler.
 
     "! <p class="shorttext synchronized">Virtual elements structure name</p>
-    CONSTANTS co_virtual_elements_struc TYPE typename VALUE 'ZDS_BC_TRSTATUS'.
+    CONSTANTS co_virtual_elements_struc TYPE typename  VALUE 'ZDS_BC_TRSTATUS'.
+    "! <p class="shorttext synchronized">Field Name of Transport Request Number</p>
+    CONSTANTS co_fieldname_trnum        TYPE fieldname VALUE 'TRKORR' ##NO_TEXT.
 
     DATA:
       "! <p class="shorttext synchronized" lang="en">Dev System ID<</p>
-      sysid_dev TYPE trtarsys,
+      sysid_dev TYPE trtarsys READ-ONLY,
       "! <p class="shorttext synchronized" lang="en">Quality System ID</p>
-      sysid_qua TYPE trtarsys,
+      sysid_qua TYPE trtarsys READ-ONLY,
       "! <p class="shorttext synchronized" lang="en">Pre-Production System ID</p>
-      sysid_pre TYPE trtarsys,
+      sysid_pre TYPE trtarsys READ-ONLY,
       "! <p class="shorttext synchronized" lang="en">Production System ID</p>
-      sysid_prd TYPE trtarsys.
+      sysid_prd TYPE trtarsys READ-ONLY.
 
     "! <p class="shorttext synchronized">Instance Setup</p>
     "!
@@ -33,24 +35,28 @@ CLASS zcl_sapdev_transport_virtual DEFINITION
     "! @parameter i_sysid_pre | <p class="shorttext synchronized">Pre-Production System ID</p>
     "! @parameter i_sysid_prd | <p class="shorttext synchronized">Production System ID</p>
     METHODS constructor
-      IMPORTING i_sysid_dev TYPE trtarsys
-                i_sysid_qua TYPE trtarsys
+      IMPORTING i_sysid_dev TYPE trtarsys OPTIONAL
+                i_sysid_qua TYPE trtarsys OPTIONAL
                 i_sysid_pre TYPE trtarsys OPTIONAL
-                i_sysid_prd TYPE trtarsys.
+                i_sysid_prd TYPE trtarsys OPTIONAL.
 
   PROTECTED SECTION.
+
   PRIVATE SECTION.
+    "! <p class="shorttext synchronized">Read Transport EXP/IMP Status</p>
+    "!
+    "! @parameter i_transport_request | <p class="shorttext synchronized"></p>
+    "! @parameter result              | <p class="shorttext synchronized"></p>
     METHODS _read_target_status
-      IMPORTING
-        i_transport_request TYPE trkorr
-      RETURNING
-        VALUE(result)       TYPE zds_bc_trstatus.
+      IMPORTING i_transport_request TYPE trkorr
+      RETURNING VALUE(result)       TYPE zds_bc_trstatus.
 
 ENDCLASS.
 
 
 
 CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
+
   METHOD constructor.
     sysid_dev = i_sysid_dev.
     sysid_qua = i_sysid_qua.
@@ -58,13 +64,31 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
     sysid_prd = i_sysid_prd.
   ENDMETHOD.
 
-
   METHOD if_sadl_exit_calc_element_read~calculate.
+
+    DATA:
+      virtual_properties  TYPE STANDARD TABLE OF zds_bc_trstatus.
+
+    LOOP AT it_original_data ASSIGNING FIELD-SYMBOL(<request>).
+      ASSIGN COMPONENT co_fieldname_trnum OF STRUCTURE <request> TO FIELD-SYMBOL(<request_num>).
+
+      IF sy-subrc = 0.
+        APPEND _read_target_status( <request_num> ) TO virtual_properties.
+        UNASSIGN <request_num>.
+      ELSE.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+
+    IF sy-subrc = 0.
+      ct_calculated_data[] = virtual_properties[].
+    ENDIF.
 
   ENDMETHOD.
 
   METHOD if_sadl_exit_calc_element_read~get_calculation_info.
-
+    "DB fields needed to determine value of calculated fields
+    APPEND co_fieldname_trnum TO et_requested_orig_elements.
   ENDMETHOD.
 
   METHOD if_salv_ida_calc_field_handler~calculate_line.
@@ -86,7 +110,7 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
 
   METHOD if_salv_ida_calc_field_handler~get_requested_fields.
     "DB fields needed to determine value of calculated fields
-    INSERT CONV fieldname( 'TRKORR' ) INTO TABLE rts_db_field_name.
+    INSERT co_fieldname_trnum INTO TABLE rts_db_field_name.
   ENDMETHOD.
 
   METHOD if_salv_ida_calc_field_handler~start_page.
@@ -94,6 +118,7 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD _read_target_status.
+
     DATA cofile TYPE ctslg_cofile.
 
     " Obtain the return codes from the target systems

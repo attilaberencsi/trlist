@@ -13,6 +13,12 @@
    <TPOOL>
     <item>
      <ID>I</ID>
+     <KEY>BHF</KEY>
+     <ENTRY>Filters</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>BHS</KEY>
      <ENTRY>System Configuration</ENTRY>
      <LENGTH>40</LENGTH>
@@ -21,6 +27,12 @@
      <ID>R</ID>
      <ENTRY>Transport Status List</ENTRY>
      <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_RELESD</KEY>
+     <ENTRY>Released</ENTRY>
+     <LENGTH>16</LENGTH>
     </item>
     <item>
      <ID>S</ID>
@@ -45,6 +57,24 @@
      <KEY>P_SY_QUA</KEY>
      <ENTRY>Quality System ID</ENTRY>
      <LENGTH>25</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_PROJ</KEY>
+     <ENTRY>CTS Project</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_TRFUNC</KEY>
+     <ENTRY>Type</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_USER</KEY>
+     <ENTRY>Owner</ENTRY>
+     <LENGTH>13</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

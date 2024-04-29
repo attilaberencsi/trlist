@@ -1,12 +1,12 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Transport Request Query'
-define view entity ZI_TRANSPORTREQUESTQUERY
-  with parameters
-    p_sys_dev  : trtarsys,
-    p_sys_qua  : trtarsys,
-    p_sys_pre  : trtarsys,
-    p_sys_prod : trtarsys
-  as select from ZI_TransportRequest
+define view entity ZI_TransportRequestQueryALV
+  //  with parameters
+  //    p_sys_dev  : trtarsys,
+  //    p_sys_qua  : trtarsys,
+  //    p_sys_pre  : trtarsys,
+  //    p_sys_prod : trtarsys
+  as select from ZI_TransportRequestQueryBase
 {
   key Trkorr,
       _Text[ 1: Langu = $session.system_language ].As4text,
@@ -26,6 +26,3 @@ define view entity ZI_TRANSPORTREQUESTQUERY
       _Attribute,
       _Text
 }
-
-where
-  Strkorr = '' // No tasks, just requests 

@@ -1,11 +1,6 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Transport Request Query'
-define view entity ZI_TRANSPORTREQUESTQUERY
-  with parameters
-    p_sys_dev  : trtarsys,
-    p_sys_qua  : trtarsys,
-    p_sys_pre  : trtarsys,
-    p_sys_prod : trtarsys
+define view entity ZI_TransportRequestQueryBase
   as select from ZI_TransportRequest
 {
   key Trkorr,

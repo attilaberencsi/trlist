@@ -14,7 +14,7 @@ CLASS lcl_view DEFINITION.
     CLASS-METHODS _prepare_column_colors.
     "! Setup D-Q-P Status column colors
     CLASS-METHODS _prepare_callback_functions.
-    "! Show ALV List
+    "! Show ALV Listcc
     CLASS-METHODS _display_alv.
 ENDCLASS.
 
