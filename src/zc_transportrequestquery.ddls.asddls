@@ -14,6 +14,7 @@ define view entity ZC_TransportRequestQuery
       As4time,
       ExportDate,
       ExportTime,
+      IHaveNote,
 
       cast ( 'A4H' as trtarsys )                  as SystemIdDev,
       cast ( 'A4H' as trtarsys )                  as SystemIdQuality,

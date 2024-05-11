@@ -5,6 +5,7 @@ define view entity ZI_TransportRequest
 
   association [0..*] to ZI_TransportRequest_Text     as _Text      on $projection.Trkorr = _Text.Trkorr
   association [0..*] to ZI_TransportRequestAttribute as _Attribute on $projection.Trkorr = _Attribute.Trkorr
+  association [0..*] to ZI_TransportObject           as _Object    on $projection.Trkorr = _Object.Trkorr
 
 {
       @ObjectModel.text.association: '_Text'
@@ -20,5 +21,6 @@ define view entity ZI_TransportRequest
 
       --Associations
       _Text,
-      _Attribute
+      _Attribute,
+      _Object
 }

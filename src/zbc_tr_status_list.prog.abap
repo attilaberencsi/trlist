@@ -66,12 +66,6 @@ START-OF-SELECTION.
                                                                             i_sysid_pre = CONV #( p_sy_pre )
                                                                             i_sysid_prd = CONV #( p_sy_prd ) ) ).
   TRY.
-*      "Configure List - View Parameters
-*      g_alv->set_view_parameters( it_parameters = VALUE #( ( name = 'P_SYS_DEV'   value = p_sy_dev )
-*                                                         ( name = 'P_SYS_QUA'   value = p_sy_qua )
-*                                                         ( name = 'P_SYS_PRE'   value = p_sy_pre )
-*                                                         ( name = 'P_SYS_PROD'  value = p_sy_prd ) ) ).
-
       "Configure List - Select Options
       DATA(g_selopt) = NEW cl_salv_range_tab_collector( ).
       g_selopt->add_ranges_for_name( EXPORTING iv_name = 'AS4USER' it_ranges = s_user[] ).

@@ -2,6 +2,7 @@
 @EndUserText.label: 'Transport Request Query'
 define view entity ZI_TransportRequestQueryBase
   as select from ZI_TransportRequest
+  association [0..1] to ZI_TransportObjectWithNote as _HasNote on $projection.Trkorr = _HasNote.Trkorr
 {
   key Trkorr,
       _Text[ 1: Langu = $session.system_language ].As4text,
@@ -15,7 +16,11 @@ define view entity ZI_TransportRequestQueryBase
 
       cast( substring(_Attribute[ 1: Attribute = 'EXPORT_TIMESTAMP' ].Reference, 1, 8 ) as zde_sapdev_tr_expdate ) as ExportDate,
 
+      substring( _Attribute[ 1: Attribute = 'EXPORT_TIMESTAMP' ].Reference, 1, 8 )                                 as Test,
+
       cast( substring(_Attribute[ 1: Attribute = 'EXPORT_TIMESTAMP' ].Reference, 9, 6 ) as zde_sapdev_tr_exptime ) as ExportTime,
+
+      _HasNote.IHaveNote,
 
       /* Associations */
       _Attribute,
