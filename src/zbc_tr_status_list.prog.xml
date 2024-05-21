@@ -13,6 +13,18 @@
    <TPOOL>
     <item>
      <ID>I</ID>
+     <KEY>A01</KEY>
+     <ENTRY>Log</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>A02</KEY>
+     <ENTRY>Show in GUI</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>BHF</KEY>
      <ENTRY>Filters</ENTRY>
      <LENGTH>17</LENGTH>

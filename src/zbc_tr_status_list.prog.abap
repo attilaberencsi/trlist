@@ -49,6 +49,7 @@ SELECTION-SCREEN BEGIN OF BLOCK bs WITH FRAME TITLE TEXT-bhs.
     p_sy_prd TYPE sysname DEFAULT 'A4H' OBLIGATORY.
 SELECTION-SCREEN END OF BLOCK bs.
 
+INCLUDE zbc_tr_status_list_cl_alv.
 
 INITIALIZATION.
   g_trfunc_sel_rstr-sign   = 'I'.
@@ -66,13 +67,17 @@ START-OF-SELECTION.
                                                                             i_sysid_pre = CONV #( p_sy_pre )
                                                                             i_sysid_prd = CONV #( p_sy_prd ) ) ).
   TRY.
-      "Configure List - Select Options
+      "Collect Select-Options
       DATA(g_selopt) = NEW cl_salv_range_tab_collector( ).
       g_selopt->add_ranges_for_name( EXPORTING iv_name = 'AS4USER' it_ranges = s_user[] ).
       g_selopt->add_ranges_for_name( EXPORTING iv_name = 'TRFUNCTION' it_ranges = s_trfunc[] ).
       g_selopt->add_ranges_for_name( EXPORTING iv_name = 'CTSPROJECT' it_ranges = s_proj[] ).
       g_selopt->get_collected_ranges( IMPORTING et_named_ranges = DATA(g_all_selopt) ).
       g_alv->set_select_options( EXPORTING it_ranges = g_all_selopt ).
+
+      "ALV Configuration
+      DATA(g_alv_handler) = NEW lcl_alv( i_alv = g_alv ).
+      g_alv_handler->configure_alv( ).
 
     CATCH cx_salv_db_connection
           cx_salv_db_table_not_supported
