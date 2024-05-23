@@ -78,6 +78,12 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>S_STAT</KEY>
+     <ENTRY>Status</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>S_TRFUNC</KEY>
      <ENTRY>Type</ENTRY>
      <LENGTH>12</LENGTH>
