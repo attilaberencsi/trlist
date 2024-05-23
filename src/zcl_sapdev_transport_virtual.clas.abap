@@ -14,19 +14,18 @@ CLASS zcl_sapdev_transport_virtual DEFINITION
     INTERFACES if_salv_ida_calc_field_handler.
 
     "! <p class="shorttext synchronized">Virtual elements structure name</p>
-    CONSTANTS co_virtual_elements_struc TYPE typename  VALUE 'ZDS_BC_TRSTATUS'.
+    CONSTANTS co_ida_calc_struc  TYPE typename  VALUE 'ZDS_BC_TRSTATUS_IDA'.
     "! <p class="shorttext synchronized">Field Name of Transport Request Number</p>
-    CONSTANTS co_fieldname_trnum        TYPE fieldname VALUE 'TRKORR' ##NO_TEXT.
+    CONSTANTS co_fieldname_trnum TYPE fieldname VALUE 'TRKORR' ##NO_TEXT.
 
-    DATA:
-      "! <p class="shorttext synchronized" lang="en">Dev System ID<</p>
-      sysid_dev TYPE trtarsys READ-ONLY,
-      "! <p class="shorttext synchronized" lang="en">Quality System ID</p>
-      sysid_qua TYPE trtarsys READ-ONLY,
-      "! <p class="shorttext synchronized" lang="en">Pre-Production System ID</p>
-      sysid_pre TYPE trtarsys READ-ONLY,
-      "! <p class="shorttext synchronized" lang="en">Production System ID</p>
-      sysid_prd TYPE trtarsys READ-ONLY.
+    "! <p class="shorttext synchronized">Dev System ID<</p>
+    DATA sysid_dev TYPE trtarsys READ-ONLY.
+    "! <p class="shorttext synchronized">Quality System ID</p>
+    DATA sysid_qua TYPE trtarsys READ-ONLY.
+    "! <p class="shorttext synchronized">Pre-Production System ID</p>
+    DATA sysid_pre TYPE trtarsys READ-ONLY.
+    "! <p class="shorttext synchronized">Production System ID</p>
+    DATA sysid_prd TYPE trtarsys READ-ONLY.
 
     "! <p class="shorttext synchronized">Instance Setup</p>
     "!
@@ -97,7 +96,33 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
     " Structure CDS record
     transport_cds = is_data_base_line.
 
-    es_calculated_fields = _read_target_status( transport_cds-Trkorr ).
+    DATA(status) = _read_target_status( transport_cds-Trkorr ).
+
+    " Workaround IDA Limitation of zeros
+    DATA(status_ida) = CORRESPONDING zds_bc_trstatus_ida( status EXCEPT import_date_q import_time_q import_date_q1 import_time_q1 import_date_p import_time_p ).
+
+    IF status-import_date_q IS NOT INITIAL.
+      status_ida-import_date_q = |{ status-import_date_q DATE = USER }|.
+    ENDIF.
+    IF status-import_time_q IS NOT INITIAL.
+      status_ida-import_time_q = |{ status-import_time_q TIME = USER }|.
+    ENDIF.
+
+    IF status-import_date_q1 IS NOT INITIAL.
+      status_ida-import_date_q1 = |{ status-import_date_q1 DATE = USER }|.
+    ENDIF.
+    IF status-import_time_q1 IS NOT INITIAL.
+      status_ida-import_time_q1 = |{ status-import_time_q1 TIME = USER }|.
+    ENDIF.
+
+    IF status-import_date_p IS NOT INITIAL.
+      status_ida-import_date_p = |{ status-import_date_p DATE = USER }|.
+    ENDIF.
+    IF status-import_time_q IS NOT INITIAL.
+      status_ida-import_time_p = |{ status-import_time_p TIME = USER }|.
+    ENDIF.
+
+    es_calculated_fields = status_ida.
   ENDMETHOD.
 
   METHOD if_salv_ida_calc_field_handler~end_page.
@@ -105,7 +130,7 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_salv_ida_calc_field_handler~get_calc_field_structure.
-    ro_calc_field_structure ?= cl_abap_typedescr=>describe_by_name( p_name = co_virtual_elements_struc ).
+    ro_calc_field_structure ?= cl_abap_typedescr=>describe_by_name( p_name = co_ida_calc_struc ).
   ENDMETHOD.
 
   METHOD if_salv_ida_calc_field_handler~get_requested_fields.

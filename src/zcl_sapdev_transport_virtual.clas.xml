@@ -23,7 +23,7 @@
      <DESCRIPT>Field Name of Transport Request Number</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
-     <CMPNAME>CO_VIRTUAL_ELEMENTS_STRUC</CMPNAME>
+     <CMPNAME>CO_IDA_CALC_STRUC</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Virtual elements structure name</DESCRIPT>
     </SEOCOMPOTX>
