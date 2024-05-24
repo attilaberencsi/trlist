@@ -118,7 +118,7 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
     IF status-import_date_p IS NOT INITIAL.
       status_ida-import_date_p = |{ status-import_date_p DATE = USER }|.
     ENDIF.
-    IF status-import_time_q IS NOT INITIAL.
+    IF status-import_time_p IS NOT INITIAL.
       status_ida-import_time_p = |{ status-import_time_p TIME = USER }|.
     ENDIF.
 
