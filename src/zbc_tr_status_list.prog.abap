@@ -81,7 +81,8 @@ START-OF-SELECTION.
 
       " ALV Configuration
       DATA(g_alv_handler) = NEW lcl_alv( i_alv = g_alv ).
-      g_alv_handler->configure_alv( ).
+
+      g_alv_handler->configure_alv( i_preprod = SWITCH abap_bool( p_sy_pre WHEN '' THEN abap_false ELSE abap_true ) ).
 
     CATCH cx_salv_db_connection
           cx_salv_db_table_not_supported

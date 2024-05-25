@@ -17,7 +17,10 @@ CLASS lcl_alv DEFINITION CREATE PUBLIC.
     DATA alv TYPE REF TO if_salv_gui_table_ida.
 
     METHODS constructor IMPORTING i_alv TYPE REF TO if_salv_gui_table_ida.
-    METHODS configure_alv.
+
+    METHODS configure_alv
+      IMPORTING
+        i_preprod TYPE abap_bool.
 
     METHODS handle_action FOR EVENT function_selected OF if_salv_gui_toolbar_ida
       IMPORTING ev_fcode.
@@ -37,7 +40,9 @@ CLASS lcl_alv DEFINITION CREATE PUBLIC.
       RETURNING VALUE(processed) TYPE sychar01.
 
     "! Configure columns
-    METHODS setup_field_catalog.
+    METHODS setup_field_catalog
+      IMPORTING
+        i_preprod TYPE abap_bool.
 
 ENDCLASS.
 
@@ -79,7 +84,7 @@ CLASS lcl_alv IMPLEMENTATION.
     SET HANDLER me->handle_action FOR alv->toolbar( ).
 
     "Configure columns
-    setup_field_catalog( ).
+    setup_field_catalog( i_preprod = i_preprod ).
 
   ENDMETHOD.
 
@@ -189,6 +194,18 @@ CLASS lcl_alv IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD setup_field_catalog.
+    " If no Pre-production system ID is provided, hide corresponding columns
+    IF i_preprod = abap_false.
+
+      alv->field_catalog( )->get_available_fields( IMPORTING ets_field_names = DATA(field_list) ).
+
+      DELETE field_list WHERE table_line = 'RETCODE_Q1'.
+      DELETE field_list WHERE table_line = 'IMPORT_DATE_Q1'.
+      DELETE field_list WHERE table_line = 'IMPORT_TIME_Q1'.
+
+      alv->field_catalog( )->set_available_fields( its_field_names = field_list ).
+    ENDIF.
+
     " Show Domain Text, not the fixed value
     alv->field_catalog( )->display_options( )->set_formatting(
         iv_field_name        = 'TRFUNCTION'
