@@ -1,9 +1,11 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Transport Request Query'
+@Search.searchable: true
 define view entity ZI_TransportRequestQueryALV
   as select from ZI_TransportRequestQueryBase
 {
   key Trkorr,
+      @Search.defaultSearchElement: true
       As4text,
       Trstatus,
       Trfunction,

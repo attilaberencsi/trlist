@@ -26,18 +26,18 @@ CLASS lcl_alv DEFINITION CREATE PUBLIC.
     METHODS handle_show_log.
 
   PRIVATE SECTION.
-    "Dark stuff
+    " Dark stuff
     CONSTANTS co_cl_adt_gui_event_dispatcher TYPE string VALUE 'CL_ADT_GUI_EVENT_DISPATCHER' ##NO_TEXT.
 
     "! Opens in ADT Editor?
     "! @parameter wb_request | the wb request
-    "! @parameter processed | C1 Flag: abap_false; abap_true; E - internal error
+    "! @parameter processed  | C1 Flag: abap_false; abap_true; E - internal error
     METHODS open_in_adt_editor
-      CHANGING
-        wb_request       TYPE REF TO cl_wb_request
-      RETURNING
-        VALUE(processed) TYPE sychar01 .
+      CHANGING  wb_request       TYPE REF TO cl_wb_request
+      RETURNING VALUE(processed) TYPE sychar01.
 
+    "! Configure columns
+    METHODS setup_field_catalog.
 
 ENDCLASS.
 
@@ -77,6 +77,10 @@ CLASS lcl_alv IMPLEMENTATION.
                                  iv_quickinfo = CONV iconquick( TEXT-a01 ) ).
 
     SET HANDLER me->handle_action FOR alv->toolbar( ).
+
+    "Configure columns
+    setup_field_catalog( ).
+
   ENDMETHOD.
 
   METHOD handle_show_log.
@@ -182,6 +186,23 @@ CLASS lcl_alv IMPLEMENTATION.
       CATCH cx_sy_dyn_call_error ##no_handler.
     ENDTRY.
 
+  ENDMETHOD.
+
+  METHOD setup_field_catalog.
+    " Show Domain Text, not the fixed value
+    alv->field_catalog( )->display_options( )->set_formatting(
+        iv_field_name        = 'TRFUNCTION'
+        iv_presentation_mode = if_salv_gui_types_ida=>cs_presentation_mode-description ).
+
+    alv->field_catalog( )->display_options( )->set_formatting(
+        iv_field_name        = 'TRSTATUS'
+        iv_presentation_mode = if_salv_gui_types_ida=>cs_presentation_mode-description ).
+
+    " Enable text search for the Transport Description field
+    IF cl_salv_gui_table_ida=>db_capabilities( )->is_text_search_supported( ).
+      alv->standard_functions( )->set_text_search_active( abap_true ).
+      alv->field_catalog( )->enable_text_search( iv_field_name = 'AS4TEXT' ).
+    ENDIF.
   ENDMETHOD.
 
 ENDCLASS.
