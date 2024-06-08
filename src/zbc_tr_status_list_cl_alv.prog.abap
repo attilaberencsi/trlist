@@ -194,17 +194,20 @@ CLASS lcl_alv IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD setup_field_catalog.
-    " If no Pre-production system ID is provided, hide corresponding columns
+
+    alv->field_catalog( )->get_available_fields( IMPORTING ets_field_names = DATA(field_list) ).
+
+    "IDA is a bit poor, hide real date/time columns, keep only the text based fields with zero elimination in CDS
+    DELETE field_list WHERE table_line = 'EXPORTDATE'.
+    DELETE field_list WHERE table_line = 'EXPORTTIME'.
+
+    " No Pre-production system ID is provided => hide corresponding columns
     IF i_preprod = abap_false.
-
-      alv->field_catalog( )->get_available_fields( IMPORTING ets_field_names = DATA(field_list) ).
-
       DELETE field_list WHERE table_line = 'RETCODE_Q1'.
       DELETE field_list WHERE table_line = 'IMPORT_DATE_Q1'.
-      DELETE field_list WHERE table_line = 'IMPORT_TIME_Q1'.
-
-      alv->field_catalog( )->set_available_fields( its_field_names = field_list ).
     ENDIF.
+
+    alv->field_catalog( )->set_available_fields( its_field_names = field_list ).
 
     " Show Domain Text, not the fixed value
     alv->field_catalog( )->display_options( )->set_formatting(
