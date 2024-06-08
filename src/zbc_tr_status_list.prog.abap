@@ -24,20 +24,19 @@ REPORT zbc_tr_status_list.
 
 TABLES: trdyse01cm, e070, ctsproject.
 
-CONSTANTS:
-  co_transport_list_cds_name TYPE dbtabl VALUE 'ZI_TransportRequestQueryALV'.
+CONSTANTS co_transport_list_cds_name TYPE dbtabl VALUE 'ZI_TransportRequestQueryALV'.
 
-DATA:
-  g_trfunc_sel_rtab TYPE RANGE OF trfunction,
-  g_trfunc_sel_rstr LIKE LINE OF g_trfunc_sel_rtab.
+DATA g_trfunc_sel_rtab TYPE RANGE OF trfunction.
+DATA g_trfunc_sel_rstr LIKE LINE OF g_trfunc_sel_rtab.
 
 
-SELECTION-SCREEN BEGIN OF BLOCK bf  WITH FRAME TITLE TEXT-bhf.
+SELECTION-SCREEN BEGIN OF BLOCK bf WITH FRAME TITLE TEXT-bhf.
   SELECT-OPTIONS:
-    s_user    FOR trdyse01cm-username,
-    s_trfunc  FOR e070-trfunction DEFAULT 'K',
-    s_proj    FOR ctsproject-trkorr,
-    s_stat    FOR e070-trstatus.
+    s_user   FOR trdyse01cm-username,
+    s_trfunc FOR e070-trfunction DEFAULT 'K',
+    s_proj   FOR ctsproject-trkorr,
+    s_stat   FOR e070-trstatus,
+    s_expdat FOR e070-as4date NO-EXTENSION.
 SELECTION-SCREEN END OF BLOCK bf.
 
 SELECTION-SCREEN BEGIN OF BLOCK bs WITH FRAME TITLE TEXT-bhs.
@@ -76,6 +75,9 @@ START-OF-SELECTION.
                                      it_ranges = s_proj[] ).
       g_selopt->add_ranges_for_name( iv_name   = 'TRSTATUS'
                                      it_ranges = s_stat[] ).
+      g_selopt->add_ranges_for_name( iv_name   = 'EXPORTDATE'
+                                     it_ranges = s_expdat[] ).
+
       g_selopt->get_collected_ranges( IMPORTING et_named_ranges = DATA(g_all_selopt) ).
       g_alv->set_select_options( it_ranges = g_all_selopt ).
 

@@ -19,14 +19,23 @@ CLASS lcl_alv DEFINITION CREATE PUBLIC.
     METHODS constructor IMPORTING i_alv TYPE REF TO if_salv_gui_table_ida.
 
     METHODS configure_alv
-      IMPORTING
-        i_preprod TYPE abap_bool.
+      IMPORTING i_preprod TYPE abap_bool.
 
     METHODS handle_action FOR EVENT function_selected OF if_salv_gui_toolbar_ida
       IMPORTING ev_fcode.
 
     METHODS handle_show_tr_in_gui.
     METHODS handle_show_log.
+
+    METHODS on_cell_click FOR EVENT cell_action OF if_salv_gui_field_display_opt
+      IMPORTING ev_field_name
+                eo_row_data
+                sender.
+
+    METHODS on_double_click FOR EVENT double_click OF if_salv_gui_table_display_opt
+      IMPORTING ev_field_name
+                eo_row_data
+                sender.
 
   PRIVATE SECTION.
     " Dark stuff
@@ -40,9 +49,17 @@ CLASS lcl_alv DEFINITION CREATE PUBLIC.
       RETURNING VALUE(processed) TYPE sychar01.
 
     "! Configure columns
+    "!
+    "! @parameter i_preprod | Preproduction system exists
     METHODS setup_field_catalog
-      IMPORTING
-        i_preprod TYPE abap_bool.
+      IMPORTING i_preprod TYPE abap_bool.
+
+    METHODS setup_events
+      RAISING cx_salv_call_after_1st_display
+              cx_salv_ida_unknown_name.
+
+    METHODS setup_toolbar
+      RAISING cx_salv_ida_gui_fcode_reserved.
 
 ENDCLASS.
 
@@ -65,27 +82,14 @@ CLASS lcl_alv IMPLEMENTATION.
   METHOD configure_alv.
     alv->selection( )->set_selection_mode( iv_mode = if_salv_gui_selection_ida=>cs_selection_mode-single ).
 
-    " Custom functions
+    " CUSTOM FUNCTIONS / BUTTONS
+    setup_toolbar( ).
 
-    alv->toolbar( )->add_separator( ).
-    "- Show Transport Request in GUI
-    alv->toolbar( )->add_button( iv_fcode     = co_action-show_tr_in_gui
-                                 iv_text      = TEXT-a02
-                                 iv_quickinfo = CONV iconquick( TEXT-a02 ) ).
+    " EVENT HANDLER REGISTRATION
+    setup_events( ).
 
-    alv->toolbar( )->add_separator( ).
-
-    "- Show Transport Log in GUI
-    alv->toolbar( )->add_button( iv_fcode     = co_action-show_log_in_gui
-                                 iv_icon      = icon_protocol
-                                 iv_text      = TEXT-a01
-                                 iv_quickinfo = CONV iconquick( TEXT-a01 ) ).
-
-    SET HANDLER me->handle_action FOR alv->toolbar( ).
-
-    "Configure columns
+    " COLUMNS
     setup_field_catalog( i_preprod = i_preprod ).
-
   ENDMETHOD.
 
   METHOD handle_show_log.
@@ -223,6 +227,66 @@ CLASS lcl_alv IMPLEMENTATION.
       alv->standard_functions( )->set_text_search_active( abap_true ).
       alv->field_catalog( )->enable_text_search( iv_field_name = 'AS4TEXT' ).
     ENDIF.
+  ENDMETHOD.
+
+  METHOD on_double_click.
+    DATA tr_cds_record TYPE ZI_TransportRequestQueryALV.
+
+    eo_row_data->get_row_data( EXPORTING iv_request_type = if_salv_gui_selection_ida=>cs_request_type-all_fields
+                               IMPORTING es_row          = tr_cds_record ).
+
+    cl_salv_ida_show_data_row=>display( iv_text = |Technical Fields|
+                                        is_data = tr_cds_record ).
+  ENDMETHOD.
+
+  METHOD on_cell_click.
+    DATA tr_cds_record TYPE ZI_TransportRequestQueryALV.
+
+    eo_row_data->get_row_data( EXPORTING iv_request_type = if_salv_gui_selection_ida=>cs_request_type-all_fields
+                               IMPORTING es_row          = tr_cds_record ).
+
+    CASE ev_field_name.
+      WHEN 'AS4TEXT'.
+        CALL FUNCTION 'TR_DISPLAY_REQUEST'
+          EXPORTING
+            i_trkorr = tr_cds_record-Trkorr.
+    ENDCASE.
+
+  ENDMETHOD.
+
+
+  METHOD setup_events.
+
+    SET HANDLER me->handle_action FOR alv->toolbar( ).
+
+    "Register Double-Click event handler
+    alv->display_options( )->enable_double_click( ).
+    SET HANDLER me->on_double_click FOR alv->display_options( ).
+
+
+    alv->field_catalog( )->display_options( )->display_as_link_to_action( iv_field_name = 'AS4TEXT' ).
+    SET HANDLER me->on_cell_click FOR alv->field_catalog( )->display_options( ).
+
+  ENDMETHOD.
+
+
+  METHOD setup_toolbar.
+
+*    alv->toolbar( )->add_separator( ).
+*    "- Show Transport Request in GUI
+*    alv->toolbar( )->add_button( iv_fcode     = co_action-show_tr_in_gui
+*                                 iv_icon      = icon_display
+*                                 iv_text      = TEXT-a02
+*                                 iv_quickinfo = CONV iconquick( TEXT-a02 ) ).
+
+    alv->toolbar( )->add_separator( ).
+
+    "- Show Transport Log in GUI
+    alv->toolbar( )->add_button( iv_fcode     = co_action-show_log_in_gui
+                                 iv_icon      = icon_protocol
+                                 iv_text      = TEXT-a01
+                                 iv_quickinfo = CONV iconquick( TEXT-a01 ) ).
+
   ENDMETHOD.
 
 ENDCLASS.

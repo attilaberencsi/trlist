@@ -20,7 +20,7 @@
     <item>
      <ID>I</ID>
      <KEY>A02</KEY>
-     <ENTRY>Show in GUI</ENTRY>
+     <ENTRY>Show</ENTRY>
      <LENGTH>14</LENGTH>
     </item>
     <item>
@@ -69,6 +69,12 @@
      <KEY>P_SY_QUA</KEY>
      <ENTRY>Quality System ID</ENTRY>
      <LENGTH>25</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_EXPDAT</KEY>
+     <ENTRY>Release Date</ENTRY>
+     <LENGTH>20</LENGTH>
     </item>
     <item>
      <ID>S</ID>

@@ -9,7 +9,7 @@
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Transport Return Code - Quality System</DDTEXT>
+    <DDTEXT>Import Return Code - Quality System</DDTEXT>
     <REPTEXT>QUAL RC</REPTEXT>
     <SCRTEXT_S>QUAL RC</SCRTEXT_S>
     <SCRTEXT_M>RetCode QUAL</SCRTEXT_M>
