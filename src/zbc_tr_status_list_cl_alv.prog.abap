@@ -198,10 +198,14 @@ CLASS lcl_alv IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD setup_field_catalog.
-
     alv->field_catalog( )->get_available_fields( IMPORTING ets_field_names = DATA(field_list) ).
 
-    "IDA is a bit poor, hide real date/time columns, keep only the text based fields with zero elimination in CDS
+*    alv->field_catalog( )->display_options( )->set_exception_column_group(
+*      iv_field_name             = 'IMPSTATUS'
+*      iv_exception_column_group = '1'
+*    ).
+
+    " IDA is a bit poor, hide real date/time columns, keep only the text based fields with zero elimination in CDS
     DELETE field_list WHERE table_line = 'EXPORTDATE'.
     DELETE field_list WHERE table_line = 'EXPORTTIME'.
 
@@ -221,6 +225,13 @@ CLASS lcl_alv IMPLEMENTATION.
     alv->field_catalog( )->display_options( )->set_formatting(
         iv_field_name        = 'TRSTATUS'
         iv_presentation_mode = if_salv_gui_types_ida=>cs_presentation_mode-description ).
+
+    " Text adjustments
+    alv->field_catalog( )->set_field_header_texts( iv_field_name  = 'AS4DATE'
+                                                   iv_header_text = 'Changed on' ).
+
+    alv->field_catalog( )->set_field_header_texts( iv_field_name  = 'AS4TIME'
+                                                   iv_header_text = 'Changed at' ).
 
     " Enable text search for the Transport Description field
     IF cl_salv_gui_table_ida=>db_capabilities( )->is_text_search_supported( ).
