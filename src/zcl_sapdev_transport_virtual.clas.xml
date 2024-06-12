@@ -28,6 +28,16 @@
      <DESCRIPT>Virtual elements structure name</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>HIGHEST_RETCODE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Highest Return Code of Export/Import</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>MAX_THE_RETURN_CODE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Calculate the highest return code</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>SYSID_DEV</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Dev System ID&lt;</DESCRIPT>

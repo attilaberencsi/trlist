@@ -200,14 +200,16 @@ CLASS lcl_alv IMPLEMENTATION.
   METHOD setup_field_catalog.
     alv->field_catalog( )->get_available_fields( IMPORTING ets_field_names = DATA(field_list) ).
 
-*    alv->field_catalog( )->display_options( )->set_exception_column_group(
-*      iv_field_name             = 'IMPSTATUS'
-*      iv_exception_column_group = '1'
-*    ).
+    " Configure field as status icon
+    " Yes Bro..., just look at :) CL_ALV_A_LVC=>int_2_ext_exception
+    alv->field_catalog( )->display_options( )->set_exception_column_group(
+      iv_field_name             = 'IMPEX_STATUS'
+      iv_exception_column_group = '3'
+    ).
 
     " IDA is a bit poor, hide real date/time columns, keep only the text based fields with zero elimination in CDS
-    DELETE field_list WHERE table_line = 'EXPORTDATE'.
-    DELETE field_list WHERE table_line = 'EXPORTTIME'.
+*    DELETE field_list WHERE table_line = 'EXPORTDATE'.
+*    DELETE field_list WHERE table_line = 'EXPORTTIME'.
 
     " No Pre-production system ID is provided => hide corresponding columns
     IF i_preprod = abap_false.
