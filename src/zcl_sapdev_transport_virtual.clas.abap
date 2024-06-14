@@ -108,42 +108,20 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
 
     DATA(status) = _read_target_status( transport_cds-Trkorr ).
 
-    " Workaround IDA Limitation of zeros
-    DATA(status_ida) = CORRESPONDING zds_bc_trstatus_ida( status EXCEPT import_date_q import_time_q import_date_q1 import_time_q1 import_date_p import_time_p ).
+    DATA(status_ida) = CORRESPONDING zds_bc_trstatus_ida( status EXCEPT impex_status ).
 
-    IF status-import_date_q IS NOT INITIAL.
-      status_ida-import_date_q = |{ status-import_date_q DATE = USER }|.
-    ENDIF.
-    IF status-import_time_q IS NOT INITIAL.
-      status_ida-import_time_q = |{ status-import_time_q TIME = USER }|.
-    ENDIF.
-
-    IF status-import_date_q1 IS NOT INITIAL.
-      status_ida-import_date_q1 = |{ status-import_date_q1 DATE = USER }|.
-    ENDIF.
-    IF status-import_time_q1 IS NOT INITIAL.
-      status_ida-import_time_q1 = |{ status-import_time_q1 TIME = USER }|.
-    ENDIF.
-
-    IF status-import_date_p IS NOT INITIAL.
-      status_ida-import_date_p = |{ status-import_date_p DATE = USER }|.
-    ENDIF.
-    IF status-import_time_p IS NOT INITIAL.
-      status_ida-import_time_p = |{ status-import_time_p TIME = USER }|.
-    ENDIF.
-
-    "Status Column holds the ALV status codes 0,1,2,3, which are represented as icons
-    "Yes Bro..., just look at :) CL_ALV_A_LVC=>int_2_ext_exception
+    " Status Column holds the ALV status codes 0,1,2,3, which are represented as icons
+    " More info at CL_ALV_A_LVC=>int_2_ext_exception
     IF status-highest_retcode IS INITIAL.
-      IF transport_cds-ExportDate IS INITIAL."It was not yet released
-        "status_ida-impex_status = '0'."No Status
+      IF transport_cds-ExportDate IS INITIAL. " It was not yet released
+        " status_ida-impex_status = '0'."No Status
       ELSE.
         status_ida-impex_status = '3'. " OK
       ENDIF.
     ELSEIF 0 < status-highest_retcode AND status-highest_retcode < 8.
-      status_ida-impex_status = '2'. "Warning
+      status_ida-impex_status = '2'. " Warning
     ELSEIF status-highest_retcode >= 8.
-      status_ida-impex_status = '1'."Error
+      status_ida-impex_status = '1'. " Error
     ENDIF.
 
     es_calculated_fields = status_ida.
@@ -177,6 +155,9 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
         es_cofile = cofile.
 
     " Fill calculated elements structure
+
+    CLEAR highest_retcode.
+
     LOOP AT cofile-systems INTO DATA(system).
 
       CASE system-systemid.
@@ -222,6 +203,9 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
           ENDIF.
       ENDCASE.
     ENDLOOP.
+
+    result-highest_retcode = highest_retcode.
+
   ENDMETHOD.
 
   METHOD max_the_return_code.

@@ -3,11 +3,12 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DD01V>
-    <DOMNAME>ZDO_SAPDEV_TR_EXPORT_TIME</DOMNAME>
+    <DOMNAME>ZDO_SAPDEV_TIME_NO_ZERO_OUT</DOMNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <DATATYPE>TIMS</DATATYPE>
     <LENG>000006</LENG>
     <OUTPUTLEN>000008</OUTPUTLEN>
+    <CONVEXIT>ZTIM0</CONVEXIT>
     <DDTEXT>Release Time</DDTEXT>
     <DOMMASTER>E</DOMMASTER>
    </DD01V>

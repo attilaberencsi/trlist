@@ -201,15 +201,9 @@ CLASS lcl_alv IMPLEMENTATION.
     alv->field_catalog( )->get_available_fields( IMPORTING ets_field_names = DATA(field_list) ).
 
     " Configure field as status icon
-    " Yes Bro..., just look at :) CL_ALV_A_LVC=>int_2_ext_exception
-    alv->field_catalog( )->display_options( )->set_exception_column_group(
-      iv_field_name             = 'IMPEX_STATUS'
-      iv_exception_column_group = '3'
-    ).
-
-    " IDA is a bit poor, hide real date/time columns, keep only the text based fields with zero elimination in CDS
-*    DELETE field_list WHERE table_line = 'EXPORTDATE'.
-*    DELETE field_list WHERE table_line = 'EXPORTTIME'.
+    " More info at: CL_ALV_A_LVC=>int_2_ext_exception
+    alv->field_catalog( )->display_options( )->set_exception_column_group( iv_field_name             = 'IMPEX_STATUS'
+                                                                           iv_exception_column_group = '3' ).
 
     " No Pre-production system ID is provided => hide corresponding columns
     IF i_preprod = abap_false.
@@ -243,13 +237,19 @@ CLASS lcl_alv IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD on_double_click.
-    DATA tr_cds_record TYPE ZI_TransportRequestQueryALV.
+
+    TYPES: BEGIN OF ty_alv_all_fields.
+             INCLUDE TYPE ZI_TransportRequestQueryALV.
+             INCLUDE TYPE zds_bc_trstatus_ida.
+    TYPES: END OF ty_alv_all_fields.
+
+    DATA: alv_record TYPE ty_alv_all_fields.
 
     eo_row_data->get_row_data( EXPORTING iv_request_type = if_salv_gui_selection_ida=>cs_request_type-all_fields
-                               IMPORTING es_row          = tr_cds_record ).
+                               IMPORTING es_row          = alv_record ).
 
-    cl_salv_ida_show_data_row=>display( iv_text = |Technical Fields|
-                                        is_data = tr_cds_record ).
+    cl_salv_ida_show_data_row=>display( iv_text = |Technical Data|
+                                        is_data = alv_record ).
   ENDMETHOD.
 
   METHOD on_cell_click.
