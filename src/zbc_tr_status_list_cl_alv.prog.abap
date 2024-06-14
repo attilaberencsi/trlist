@@ -237,13 +237,12 @@ CLASS lcl_alv IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD on_double_click.
+    TYPES BEGIN OF ty_alv_all_fields.
+            INCLUDE TYPE ZI_TransportRequestQueryALV.
+            INCLUDE TYPE zds_bc_trstatus_ida.
+    TYPES END OF ty_alv_all_fields.
 
-    TYPES: BEGIN OF ty_alv_all_fields.
-             INCLUDE TYPE ZI_TransportRequestQueryALV.
-             INCLUDE TYPE zds_bc_trstatus_ida.
-    TYPES: END OF ty_alv_all_fields.
-
-    DATA: alv_record TYPE ty_alv_all_fields.
+    DATA alv_record TYPE ty_alv_all_fields.
 
     eo_row_data->get_row_data( EXPORTING iv_request_type = if_salv_gui_selection_ida=>cs_request_type-all_fields
                                IMPORTING es_row          = alv_record ).
