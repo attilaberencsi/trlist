@@ -42,6 +42,10 @@ CLASS zcl_sapdev_transport_virtual DEFINITION
   PROTECTED SECTION.
 
   PRIVATE SECTION.
+
+    "! <p class="shorttext synchronized">Highest Return Code of Export/Import</p>
+    DATA highest_retcode TYPE strw_int4.
+
     "! <p class="shorttext synchronized">Read Transport EXP/IMP Status</p>
     "!
     "! @parameter i_transport_request | <p class="shorttext synchronized"></p>
@@ -49,6 +53,12 @@ CLASS zcl_sapdev_transport_virtual DEFINITION
     METHODS _read_target_status
       IMPORTING i_transport_request TYPE trkorr
       RETURNING VALUE(result)       TYPE zds_bc_trstatus.
+
+    "! <p class="shorttext synchronized" lang="en">Calculate the highest return code</p>
+    "!
+    "! @parameter i_retcode | <p class="shorttext synchronized" lang="en"></p>
+    METHODS max_the_return_code
+      IMPORTING i_retcode TYPE strw_int4.
 
 ENDCLASS.
 
@@ -91,35 +101,27 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_salv_ida_calc_field_handler~calculate_line.
-    DATA transport_cds TYPE ZC_TransportRequestQuery.
+    DATA transport_cds TYPE ZI_TransportRequestQueryALV.
 
     " Structure CDS record
     transport_cds = is_data_base_line.
 
     DATA(status) = _read_target_status( transport_cds-Trkorr ).
 
-    " Workaround IDA Limitation of zeros
-    DATA(status_ida) = CORRESPONDING zds_bc_trstatus_ida( status EXCEPT import_date_q import_time_q import_date_q1 import_time_q1 import_date_p import_time_p ).
+    DATA(status_ida) = CORRESPONDING zds_bc_trstatus_ida( status EXCEPT impex_status ).
 
-    IF status-import_date_q IS NOT INITIAL.
-      status_ida-import_date_q = |{ status-import_date_q DATE = USER }|.
-    ENDIF.
-    IF status-import_time_q IS NOT INITIAL.
-      status_ida-import_time_q = |{ status-import_time_q TIME = USER }|.
-    ENDIF.
-
-    IF status-import_date_q1 IS NOT INITIAL.
-      status_ida-import_date_q1 = |{ status-import_date_q1 DATE = USER }|.
-    ENDIF.
-    IF status-import_time_q1 IS NOT INITIAL.
-      status_ida-import_time_q1 = |{ status-import_time_q1 TIME = USER }|.
-    ENDIF.
-
-    IF status-import_date_p IS NOT INITIAL.
-      status_ida-import_date_p = |{ status-import_date_p DATE = USER }|.
-    ENDIF.
-    IF status-import_time_p IS NOT INITIAL.
-      status_ida-import_time_p = |{ status-import_time_p TIME = USER }|.
+    " Status Column holds the ALV status codes 0,1,2,3, which are represented as icons
+    " More info at CL_ALV_A_LVC=>int_2_ext_exception
+    IF status-highest_retcode IS INITIAL.
+      IF transport_cds-ExportDate IS INITIAL. " It was not yet released
+        " status_ida-impex_status = '0'."No Status
+      ELSE.
+        status_ida-impex_status = '3'. " OK
+      ENDIF.
+    ELSEIF 0 < status-highest_retcode AND status-highest_retcode < 8.
+      status_ida-impex_status = '2'. " Warning
+    ELSEIF status-highest_retcode >= 8.
+      status_ida-impex_status = '1'. " Error
     ENDIF.
 
     es_calculated_fields = status_ida.
@@ -143,7 +145,6 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD _read_target_status.
-
     DATA cofile TYPE ctslg_cofile.
 
     " Obtain the return codes from the target systems
@@ -154,17 +155,22 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
         es_cofile = cofile.
 
     " Fill calculated elements structure
+
+    CLEAR highest_retcode.
+
     LOOP AT cofile-systems INTO DATA(system).
 
       CASE system-systemid.
 
         WHEN me->sysid_dev.
           result-retcode_d = system-rc.
+          max_the_return_code( system-rc ).
 
         WHEN me->sysid_qua.
           READ TABLE system-steps INTO DATA(import_step) WITH KEY stepid = 'I'. " Import
           IF sy-subrc = 0.
             result-retcode_q = system-rc.
+            max_the_return_code( system-rc ).
             READ TABLE import_step-actions INTO DATA(import_date_time) INDEX 1.
             IF sy-subrc = 0.
               result-import_date_q = import_date_time-date.
@@ -176,6 +182,7 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
           READ TABLE system-steps INTO import_step WITH KEY stepid = 'I'. " Import
           IF sy-subrc = 0.
             result-retcode_q1 = system-rc.
+            max_the_return_code( system-rc ).
             READ TABLE import_step-actions INTO import_date_time INDEX 1.
             IF sy-subrc = 0.
               result-import_date_q1 = import_date_time-date.
@@ -187,6 +194,7 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
           READ TABLE system-steps INTO import_step WITH KEY stepid = 'I'. " Import
           IF sy-subrc = 0.
             result-retcode_p = system-rc.
+            max_the_return_code( system-rc ).
             READ TABLE import_step-actions INTO import_date_time INDEX 1.
             IF sy-subrc = 0.
               result-import_date_p = import_date_time-date.
@@ -195,6 +203,15 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
           ENDIF.
       ENDCASE.
     ENDLOOP.
+
+    result-highest_retcode = highest_retcode.
+
+  ENDMETHOD.
+
+  METHOD max_the_return_code.
+    IF i_retcode > highest_retcode.
+      highest_retcode = i_retcode.
+    ENDIF.
   ENDMETHOD.
 
 ENDCLASS.

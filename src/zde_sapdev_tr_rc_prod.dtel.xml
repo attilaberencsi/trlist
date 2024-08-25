@@ -9,7 +9,7 @@
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Transport Return Code - Production System</DDTEXT>
+    <DDTEXT>Import Return Code - Production System</DDTEXT>
     <REPTEXT>PRD RC</REPTEXT>
     <SCRTEXT_S>PRD RC</SCRTEXT_S>
     <SCRTEXT_M>RetCode PROD</SCRTEXT_M>

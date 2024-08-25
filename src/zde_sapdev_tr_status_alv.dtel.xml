@@ -3,20 +3,21 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DD04V>
-    <ROLLNAME>ZDE_SAPDEV_TR_IMPTIME_PRE</ROLLNAME>
+    <ROLLNAME>ZDE_SAPDEV_TR_STATUS_ALV</ROLLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
-    <DOMNAME>ZDO_SAPDEV_TIME_NO_ZERO_OUT</DOMNAME>
     <HEADLEN>55</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Transport Import Time - Pre-production</DDTEXT>
-    <REPTEXT>PRE Import</REPTEXT>
-    <SCRTEXT_S>PRE Import</SCRTEXT_S>
-    <SCRTEXT_M>Import in Pre-Prod</SCRTEXT_M>
-    <SCRTEXT_L>Import Date in Pre-Production System</SCRTEXT_L>
+    <DDTEXT>Import/Export Status Highest Severity</DDTEXT>
+    <REPTEXT>Import/Export Status</REPTEXT>
+    <SCRTEXT_S>Status</SCRTEXT_S>
+    <SCRTEXT_M>Import/Export Status</SCRTEXT_M>
+    <SCRTEXT_L>Import Export Highest Severity</SCRTEXT_L>
     <DTELMASTER>E</DTELMASTER>
-    <REFKIND>D</REFKIND>
+    <DATATYPE>CHAR</DATATYPE>
+    <LENG>000001</LENG>
+    <OUTPUTLEN>000001</OUTPUTLEN>
    </DD04V>
   </asx:values>
  </asx:abap>

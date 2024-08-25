@@ -18,11 +18,9 @@ define view entity ZI_TransportRequestQueryBase
       As4time,
 
       cast( substring(_Attribute[ 1: Attribute = 'EXPORT_TIMESTAMP' ].Reference, 1, 8 ) as zde_sapdev_tr_expdate ) as ExportDate,
-
-      substring( _Attribute[ 1: Attribute = 'EXPORT_TIMESTAMP' ].Reference, 1, 8 )                                 as Test,
-
       cast( substring(_Attribute[ 1: Attribute = 'EXPORT_TIMESTAMP' ].Reference, 9, 6 ) as zde_sapdev_tr_exptime ) as ExportTime,
 
+      @Semantics.booleanIndicator: true
       _HasNote.IHaveNote,
 
       /* Associations */
