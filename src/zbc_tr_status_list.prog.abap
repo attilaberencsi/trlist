@@ -8,11 +8,8 @@
 *&  in target systems.
 *&
 *& Features
-*&  - List transports after certain release date
-*&  - Shows release date and import Return Codes(RC) in target systems
-*&  - Shows which request contains OSS Notes
-*&  - Filter By Owner, CTS Project, Release Date/Status
-*&  - Double-click on the line shows transport request
+*& https://github.com/attilaberencsi/trlist/tree/onPrem-2022
+*&
 *& Setup
 *&  - Provide Target System IDs in parameters p_sy_(dev/qua/prd)
 *&    Why not to save them as default variant ? (:
