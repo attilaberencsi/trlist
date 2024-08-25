@@ -1,5 +1,7 @@
 # Transport Status List
 
+Note: onPremise version 2022+ is available [here](https://github.com/attilaberencsi/trlist/tree/onPrem-2022).
+
 ![image](https://user-images.githubusercontent.com/20442467/191972203-e9ca3c84-079a-4492-a188-12ac7438bc6c.png)
 
 ![image](https://user-images.githubusercontent.com/20442467/191972741-a2aefc0f-6e57-462b-a2bf-0cae46a29947.png)
