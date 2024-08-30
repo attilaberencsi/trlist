@@ -4,7 +4,7 @@
 
 Welcome!
 
-This tool provides You a list of Transport Requests of Your team or the whole system. Helps people dealing with release management. 
+This tool provides You a list of Transport Requests of Your team or the whole system. Helps people dealing with release management.
 
 Supported onPremise versions: 2022+
 
@@ -23,7 +23,7 @@ Supported onPremise versions: 2022+
 
 ### Actions and Hotspots
 
-![1724596750980](image/README/1724596750980.png)
+![1725002092667](image/README/1725002092667.png)
 
 * Display Log of the selected TR
 * Free text search in text columns ( currently enabled for Short Description)
