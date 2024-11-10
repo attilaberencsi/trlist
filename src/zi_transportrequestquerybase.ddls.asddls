@@ -7,9 +7,7 @@ define view entity ZI_TransportRequestQueryBase
 {
   key Trkorr,
       _Text[ 1: Langu = $session.system_language ].As4text,
-      //@ObjectModel.text.element: [ 'TrfunctionText' ]
       Trfunction,
-      //_Type.Text                                                                                                   as TrfunctionText,
       Trstatus,
       Tarsystem,
       cast( _Attribute[ 1: Attribute = 'SAP_CTS_PROJECT' ].Reference as trkorr_p )                                 as CTSProject,
@@ -25,7 +23,8 @@ define view entity ZI_TransportRequestQueryBase
 
       /* Associations */
       _Attribute,
-      _Text
+      _Text,
+      _UserName
 }
 
 where

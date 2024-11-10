@@ -13,6 +13,7 @@ define view entity ZI_TransportRequestQueryALV
       Tarsystem,
       CTSProject,
       As4user,
+      _UserName.UserDescription                        as As4userName,
       As4date,
       As4time,
       cast ( ExportDate as zde_sapdev_tr_export_date ) as ExportDate,
