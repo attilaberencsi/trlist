@@ -1,0 +1,50 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Transport Request Query API'
+define view entity ZAPI_TransportRequestQuery
+  as select from ZI_TransportRequestQueryBase
+{
+  key Trkorr,
+      As4text,
+      Trfunction,
+      Trstatus,
+      Tarsystem,
+      CTSProject,
+      As4user,
+      As4date,
+      As4time,
+      ExportDate,
+      ExportTime,
+      IHaveNote,
+
+      cast ( 'A4H' as trtarsys )             as SystemIdDev,
+      cast ( 'A4H' as trtarsys )             as SystemIdQuality,
+      cast ( 'A4H' as trtarsys )             as SystemIdPreProd,
+      cast ( 'A4H' as trtarsys )             as SystemIdProd,
+
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( 0  as abap.int4 )                as highest_retcode,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as zde_sapdev_tr_rc_d )      as retcode_d,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as  zde_sapdev_tr_rc_d )     as retcode_q,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as  zde_sapdev_tr_id_q )     as import_date_q,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as   zde_sapdev_tr_it_q )    as import_time_q,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as   zde_sapdev_tr_rc_pre )  as retcode_q1,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as   zde_sapdev_tr_id_pre )  as import_date_q1,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as   zde_sapdev_tr_it_pre )  as import_time_q1,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as   zde_sapdev_tr_rc_prod ) as retcode_p,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as   zde_sapdev_tr_id_prod ) as import_date_p,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_SAPDEV_TRANSPORT_VIRTUAL'
+      cast( ''  as   zde_sapdev_tr_it_prod ) as import_time_p,
+
+      /* Associations */
+      _Attribute,
+      _Text
+}

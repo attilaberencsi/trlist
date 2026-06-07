@@ -76,13 +76,13 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
   METHOD if_sadl_exit_calc_element_read~calculate.
 
     DATA:
-      virtual_properties  TYPE STANDARD TABLE OF zds_bc_trstatus.
+      virtual_properties  TYPE STANDARD TABLE OF zds_bc_trstatus_api.
 
     LOOP AT it_original_data ASSIGNING FIELD-SYMBOL(<request>).
       ASSIGN COMPONENT co_fieldname_trnum OF STRUCTURE <request> TO FIELD-SYMBOL(<request_num>).
 
       IF sy-subrc = 0.
-        APPEND _read_target_status( <request_num> ) TO virtual_properties.
+        APPEND CORRESPONDING #( _read_target_status( <request_num> ) ) TO virtual_properties.
         UNASSIGN <request_num>.
       ELSE.
         RETURN.
@@ -90,7 +90,7 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
     ENDLOOP.
 
     IF sy-subrc = 0.
-      ct_calculated_data[] = virtual_properties[].
+      ct_calculated_data = CORRESPONDING #( virtual_properties ).
     ENDIF.
 
   ENDMETHOD.
@@ -149,10 +149,8 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
 
     " Obtain the return codes from the target systems
     CALL FUNCTION 'TR_READ_GLOBAL_INFO_OF_REQUEST'
-      EXPORTING
-        iv_trkorr = i_transport_request
-      IMPORTING
-        es_cofile = cofile.
+      EXPORTING iv_trkorr = i_transport_request
+      IMPORTING es_cofile = cofile.
 
     " Fill calculated elements structure
 
@@ -205,7 +203,6 @@ CLASS zcl_sapdev_transport_virtual IMPLEMENTATION.
     ENDLOOP.
 
     result-highest_retcode = highest_retcode.
-
   ENDMETHOD.
 
   METHOD max_the_return_code.

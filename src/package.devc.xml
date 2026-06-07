@@ -4,6 +4,7 @@
   <asx:values>
    <DEVC>
     <CTEXT>Transport Status List</CTEXT>
+    <SRV_CHECK>X</SRV_CHECK>
    </DEVC>
   </asx:values>
  </asx:abap>
